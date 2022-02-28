@@ -1,0 +1,1 @@
+from pinterest.asynio.pins import PinsResource

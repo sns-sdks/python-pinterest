@@ -1,4 +1,4 @@
-from mod import __version__
+from pinterest import __version__
 
 
 def test_version():

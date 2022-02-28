@@ -1,13 +1,13 @@
 [tool.poetry]
-name = "mod"
+name = "python-pinterest"
 version = "0.1.0"
-description = "mod for something ✨ 🍰 ✨"
+description = "A simple Python wrapper for Pinterest REST API (Beta) (5.x) ✨ 🍰 ✨"
 authors = ["ikaroskun <merle.liukun@gmail.com>"]
 license = "MIT"
 readme = "README.rst"
-homepage = "https://github.com/MerleLiuKun/PyModuleRepo"
-repository = "https://github.com/MerleLiuKun/PyModuleRepo"
-keywords = ["Python", "module", "template"]
+homepage = "https://github.com/sns-sdks/python-pinterest"
+repository = "https://github.com/sns-sdks/python-pinterest"
+keywords = ["pinterest", "pinterest sdk", "pinterest api v5"]
 
 # https://pypi.org/classifiers/
 classifiers = [
@@ -24,11 +24,13 @@ classifiers = [
 
 # build
 packages = [
-    { include = "mod"},
+    { include = "pinterest"},
 ]
 
 [tool.poetry.dependencies]
 python = "^3.6.2"
+httpx = "0.22.0"
+Authlib = "^0.15.5"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0.0"
