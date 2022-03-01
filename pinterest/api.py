@@ -1,5 +1,5 @@
 """
-
+    Api implementation.
 """
 import inspect
 from typing import List, Optional, Tuple, Union
@@ -8,12 +8,12 @@ from authlib.integrations.httpx_client import OAuth2Client, AsyncOAuth2Client
 from httpx import AsyncClient, Client, Headers, Response
 
 from pinterest import PinterestException
-from pinterest.resource import BaseResource
-from pinterest import sync, asynio
+from pinterest.base_endpoint import BaseEndpoint
+from pinterest import sync, asynchronous
 
 
 def _is_resource_endpoint(obj):
-    return isinstance(obj, BaseResource)
+    return isinstance(obj, BaseEndpoint)
 
 
 class BaseApi:
@@ -34,13 +34,13 @@ class BaseApi:
         return self
 
     def __init__(
-            self,
-            app_id: Optional[int] = None,
-            app_secret: Optional[str] = None,
-            access_token: Optional[str] = None,
-            timeout: Optional[int] = None,
-            proxies: Optional[dict] = None,
-            headers: Optional[dict] = None,
+        self,
+        app_id: Optional[int] = None,
+        app_secret: Optional[str] = None,
+        access_token: Optional[str] = None,
+        timeout: Optional[int] = None,
+        proxies: Optional[dict] = None,
+        headers: Optional[dict] = None,
     ):
         self.app_id = app_id
         self.app_secret = app_secret
@@ -57,24 +57,28 @@ class BaseApi:
     def add_access_token_to_headers(self) -> Headers:
         return Headers({"Authorization": "Bearer " + self.access_token})
 
+    @staticmethod
+    def parse_response(response: Response):
+        if response.is_success:
+            return response.json()
+        raise PinterestException(**response.json())
+
 
 class Api(BaseApi):
-    pins = sync.PinsResource()
+    pins = sync.PinsEndpoint()
 
     def build_client(self):
         self.client = Client(
-            headers=self.headers,
-            proxies=self.proxies,
-            timeout=self.timeout
+            headers=self.headers, proxies=self.proxies, timeout=self.timeout
         )
 
-    def _request(
-            self,
-            method: str,
-            url: str,
-            params: Optional[dict] = None,
-            json: Optional[dict] = None,
-            auth_need: bool = True,
+    def request(
+        self,
+        method: str,
+        url: str,
+        params: Optional[dict] = None,
+        json: Optional[dict] = None,
+        auth_need: bool = True,
     ) -> Response:
         # Add Authorize
         headers = self.add_access_token_to_headers() if auth_need else None
@@ -95,13 +99,13 @@ class Api(BaseApi):
         return resp
 
     def _get_oauth_client(
-            self,
-            redirect_uri: Optional[str] = None,
-            scope: Optional[List[str]] = None,
-            **kwargs,
+        self,
+        redirect_uri: Optional[str] = None,
+        scope: Optional[List[str]] = None,
+        **kwargs,
     ) -> OAuth2Client:
         if not all([self.app_id, self.app_secret]):
-            raise PinterestException({"message": "OAuth need app credentials"})
+            raise PinterestException(code=-1, message="OAuth need app credentials")
 
         if redirect_uri is None:
             redirect_uri = self.DEFAULT_REDIRECT_URI
@@ -118,10 +122,10 @@ class Api(BaseApi):
         return client
 
     def get_authorization_url(
-            self,
-            redirect_uri: Optional[str] = None,
-            scope: Optional[List[str]] = None,
-            **kwargs,
+        self,
+        redirect_uri: Optional[str] = None,
+        scope: Optional[List[str]] = None,
+        **kwargs,
     ) -> Tuple[str, str]:
         """
 
@@ -154,23 +158,21 @@ class Api(BaseApi):
 
 
 class AsyncApi(BaseApi):
-    pins = asynio.PinsResource()
+    pins = asynchronous.PinsEndpoint()
 
     def build_client(self):
         self.client = AsyncClient(
-            headers=self.headers,
-            proxies=self.proxies,
-            timeout=self.timeout
+            headers=self.headers, proxies=self.proxies, timeout=self.timeout
         )
 
     def _get_oauth_client(
-            self,
-            redirect_uri: Optional[str] = None,
-            scope: Optional[List[str]] = None,
-            **kwargs,
+        self,
+        redirect_uri: Optional[str] = None,
+        scope: Optional[List[str]] = None,
+        **kwargs,
     ) -> AsyncOAuth2Client:
         if not all([self.app_id, self.app_secret]):
-            raise PinterestException({"message": "OAuth need app credentials"})
+            raise PinterestException(code=-1, message="OAuth need app credentials")
 
         if redirect_uri is None:
             redirect_uri = self.DEFAULT_REDIRECT_URI
@@ -187,10 +189,10 @@ class AsyncApi(BaseApi):
         return client
 
     def get_authorization_url(
-            self,
-            redirect_uri: Optional[str] = None,
-            scope: Optional[List[str]] = None,
-            **kwargs,
+        self,
+        redirect_uri: Optional[str] = None,
+        scope: Optional[List[str]] = None,
+        **kwargs,
     ) -> Tuple[str, str]:
         """
 
@@ -207,7 +209,9 @@ class AsyncApi(BaseApi):
         )
         return authorization_url, state
 
-    async def generate_access_token(self, response: str, redirect_uri: Optional[str] = None):
+    async def generate_access_token(
+        self, response: str, redirect_uri: Optional[str] = None
+    ):
         """
         :param response:
         :param redirect_uri:
@@ -221,5 +225,28 @@ class AsyncApi(BaseApi):
         )
         return token
 
-    async def _request(self):
-        pass
+    async def request(
+        self,
+        method: str,
+        url: str,
+        params: Optional[dict] = None,
+        json: Optional[dict] = None,
+        auth_need: bool = True,
+    ) -> Response:
+        # Add Authorize
+        headers = self.add_access_token_to_headers() if auth_need else None
+
+        if not url.startswith("http"):
+            url = self.DEFAULT_API_URL + url
+
+        try:
+            resp = await self.client.request(
+                method=method,
+                url=url,
+                params=params,
+                json=json,
+                headers=headers,
+            )
+        except Exception as e:
+            raise Exception(e)
+        return resp

@@ -1,1 +1,1 @@
-from pinterest.sync.pins import PinsResource
+from pinterest.sync.pins import PinsEndpoint
