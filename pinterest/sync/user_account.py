@@ -22,7 +22,7 @@ class UserAccountEndpoint(Endpoint):
 
         params = {"ad_account_id": ad_account_id} if ad_account_id else None
         resp = self._get(
-            url=f"user_account",
+            url="user_account",
             params=params,
         )
         data = self._parse_response(response=resp)

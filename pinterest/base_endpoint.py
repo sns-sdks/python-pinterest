@@ -41,6 +41,13 @@ class Endpoint(BaseEndpoint):
             **kwargs,
         )
 
+    def _patch(self, url, **kwargs):
+        return self._client.request(
+            method="PATCH",
+            url=url,
+            **kwargs,
+        )
+
     def _delete(self, url, **kwargs):
         return self._client.request(
             method="DELETE",
@@ -60,6 +67,13 @@ class AsyncEndpoint(BaseEndpoint):
     async def _post(self, url, **kwargs):
         return await self._client.request(
             method="POST",
+            url=url,
+            **kwargs,
+        )
+
+    async def _patch(self, url, **kwargs):
+        return await self._client.request(
+            method="PATCH",
             url=url,
             **kwargs,
         )
