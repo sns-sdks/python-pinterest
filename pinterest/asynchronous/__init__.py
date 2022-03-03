@@ -1,1 +1,2 @@
 from pinterest.asynchronous.pins import PinsEndpoint
+from pinterest.asynchronous.user_account import UserAccountEndpoint

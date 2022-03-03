@@ -7,9 +7,9 @@ from typing import List, Optional, Tuple, Union
 from authlib.integrations.httpx_client import OAuth2Client, AsyncOAuth2Client
 from httpx import AsyncClient, Client, Headers, Response
 
-from pinterest import PinterestException
-from pinterest.base_endpoint import BaseEndpoint
 from pinterest import sync, asynchronous
+from pinterest.base_endpoint import BaseEndpoint
+from pinterest.exceptions import PinterestException
 
 
 def _is_resource_endpoint(obj):
@@ -66,6 +66,7 @@ class BaseApi:
 
 class Api(BaseApi):
     pins = sync.PinsEndpoint()
+    user_account = sync.UserAccountEndpoint()
 
     def build_client(self):
         self.client = Client(
@@ -159,6 +160,7 @@ class Api(BaseApi):
 
 class AsyncApi(BaseApi):
     pins = asynchronous.PinsEndpoint()
+    user_account = asynchronous.UserAccountEndpoint()
 
     def build_client(self):
         self.client = AsyncClient(

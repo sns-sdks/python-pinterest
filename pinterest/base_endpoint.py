@@ -1,6 +1,7 @@
 """
     Endpoint class for Pinterest. like pins,boards and so on.
 """
+from httpx import Response
 
 
 class BaseEndpoint:
@@ -20,6 +21,9 @@ class BaseEndpoint:
     @property
     def app_secret(self):
         return self._client.app_secret
+
+    def _parse_response(self, response: Response):
+        return self._client.parse_response(response=response)
 
 
 class Endpoint(BaseEndpoint):

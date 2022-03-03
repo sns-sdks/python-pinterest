@@ -1,5 +1,5 @@
 """
-    Pins endpoints implementation
+    Pins endpoints implementation.
 """
 from pinterest.base_endpoint import Endpoint
 
