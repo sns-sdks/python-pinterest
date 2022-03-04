@@ -5,7 +5,7 @@
 """
 
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Optional
 
 from .base import BaseModel
 
@@ -19,7 +19,7 @@ class Owner(BaseModel):
 class Board(BaseModel):
     id: str = field(default=None)
     name: str = field(default=None)
-    description: str = field(default=None, repr=False)
+    description: Optional[str] = field(default=None, repr=False)
     owner: Owner = field(default=None, repr=False)
     privacy: str = field(default=None, repr=False)
 
@@ -27,4 +27,16 @@ class Board(BaseModel):
 @dataclass
 class BoardsResponse(BaseModel):
     items: List[Board] = field(default=None)
-    bookmark: str = field(default=None)
+    bookmark: Optional[str] = field(default=None)
+
+
+@dataclass
+class BoardSection(BaseModel):
+    id: str = field(default=None)
+    name: str = field(default=None)
+
+
+@dataclass
+class BoardSectionsResponse(BaseModel):
+    items: List[BoardSection] = field(default=None)
+    bookmark: Optional[str] = field(default=None)
