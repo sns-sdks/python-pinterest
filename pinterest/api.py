@@ -65,9 +65,10 @@ class BaseApi:
 
 
 class Api(BaseApi):
-    pins = sync.PinsEndpoint()
     user_account = sync.UserAccountEndpoint()
     board = sync.BoardsEndpoint()
+    pins = sync.PinsEndpoint()
+    media = sync.MediaEndpoint()
 
     def build_client(self):
         self.client = Client(

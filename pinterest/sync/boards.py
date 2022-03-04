@@ -23,17 +23,17 @@ class BoardsEndpoint(Endpoint):
         return_json: bool = False,
     ) -> Union[BoardsResponse, dict]:
         """
-        :param page_size:
-        :param bookmark:
-        :param privacy:
+        :param page_size: Maximum number of items to include in a single page of the response. [1..100]
+        :param bookmark: Cursor used to fetch the next page of items
+        :param privacy: Privacy setting for a board.
         :param return_json: Type for returned data. If you set True JSON data will be returned.
         :return: Boards Response
         """
 
         params = {"page_size": page_size}
-        if bookmark:
+        if bookmark is not None:
             params["bookmark"] = bookmark
-        if privacy:
+        if privacy is not None:
             params["privacy"] = privacy
 
         resp = self._get(
