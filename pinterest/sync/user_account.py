@@ -4,7 +4,7 @@
 from typing import Optional, Union
 
 from pinterest.base_endpoint import Endpoint
-from pinterest.models import UserAccount, UserAccountAnalytics
+from pinterest.models import UserAccount, Analytics
 from pinterest.utils.params import enf_comma_separated
 
 
@@ -26,10 +26,7 @@ class UserAccountEndpoint(Endpoint):
             params=params,
         )
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return UserAccount.new_from_json_dict(data=data)
+        return data if return_json else UserAccount.new_from_json_dict(data=data)
 
     def get_analytics(
         self,
@@ -42,7 +39,7 @@ class UserAccountEndpoint(Endpoint):
         split_field: str = "NO_SPLIT",
         ad_account_id: Optional[str] = None,
         return_json: bool = False,
-    ) -> Union[UserAccountAnalytics, dict]:
+    ) -> Union[Analytics, dict]:
         """
         Get analytics for the "operation user_account"
 
@@ -77,7 +74,4 @@ class UserAccountEndpoint(Endpoint):
             params=params,
         )
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return UserAccountAnalytics.new_from_json_dict(data=data)
+        return data if return_json else Analytics.new_from_json_dict(data=data)

@@ -20,11 +20,11 @@ class DailyMetric(BaseModel):
 
 
 @dataclass
-class UserAccountAnalyticsAll(BaseModel):
+class AnalyticsAll(BaseModel):
     daily_metrics: List[DailyMetric] = field(default=None)
     summary_metrics: Dict = field(default=None, repr=False)
 
 
 @dataclass
-class UserAccountAnalytics(BaseModel):
-    all: UserAccountAnalyticsAll = field(default=None)
+class Analytics(BaseModel):
+    all: AnalyticsAll = field(default=None)
