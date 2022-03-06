@@ -3,7 +3,7 @@
 """
 from typing import Optional, Union
 
-from pinterest.base_endpoint import Endpoint
+from pinterest.base_endpoint import AsyncEndpoint
 from pinterest.exceptions import PinterestException
 from pinterest.models import (
     Board,
@@ -14,8 +14,8 @@ from pinterest.models import (
 )
 
 
-class BoardsEndpoint(Endpoint):
-    def list(
+class BoardsAsyncEndpoint(AsyncEndpoint):
+    async def list(
         self,
         page_size: int = 25,
         bookmark: Optional[str] = None,
@@ -36,7 +36,7 @@ class BoardsEndpoint(Endpoint):
         if privacy is not None:
             params["privacy"] = privacy
 
-        resp = self._get(
+        resp = await self._get(
             url=f"boards",
             params=params,
         )
@@ -46,21 +46,21 @@ class BoardsEndpoint(Endpoint):
         else:
             return BoardsResponse.new_from_json_dict(data=data)
 
-    def get(self, board_id: str, return_json: bool = False) -> Union[Board, dict]:
+    async def get(self, board_id: str, return_json: bool = False) -> Union[Board, dict]:
         """
         :param board_id: Unique identifier of a board.
         :param return_json: Type for returned data. If you set True JSON data will be returned.
         :return: Board data.
         """
 
-        resp = self._get(url=f"boards/{board_id}")
+        resp = await self._get(url=f"boards/{board_id}")
         data = self._parse_response(response=resp)
         if return_json:
             return data
         else:
             return Board.new_from_json_dict(data=data)
 
-    def create(
+    async def create(
         self,
         name: str,
         description: Optional[str] = None,
@@ -81,7 +81,7 @@ class BoardsEndpoint(Endpoint):
             data["description"] = description
         if privacy is not None:
             data["privacy"] = privacy
-        resp = self._post(
+        resp = await self._post(
             url="boards",
             json=data,
         )
@@ -91,7 +91,7 @@ class BoardsEndpoint(Endpoint):
         else:
             return Board.new_from_json_dict(data=data)
 
-    def update(
+    async def update(
         self,
         board_id: str,
         name: Optional[str] = None,
@@ -123,7 +123,7 @@ class BoardsEndpoint(Endpoint):
                 code=-1, message="Update board need one of name,description,privacy"
             )
 
-        resp = self._patch(
+        resp = await self._patch(
             url=f"boards/{board_id}",
             json=data,
         )
@@ -133,19 +133,19 @@ class BoardsEndpoint(Endpoint):
         else:
             return Board.new_from_json_dict(data=data)
 
-    def delete(self, board_id: str) -> bool:
+    async def delete(self, board_id: str) -> bool:
         """
         Delete a board owned by the "operation user_account".
 
         :param board_id: Unique identifier of a board.
         :return: delete status
         """
-        resp = self._delete(url=f"boards/{board_id}")
+        resp = await self._delete(url=f"boards/{board_id}")
         if resp.is_success:
             return True
         self._parse_response(response=resp)
 
-    def list_pins(
+    async def list_pins(
         self,
         board_id: str,
         page_size: int = 25,
@@ -166,7 +166,7 @@ class BoardsEndpoint(Endpoint):
         if bookmark is not None:
             params["bookmark"] = bookmark
 
-        resp = self._get(
+        resp = await self._get(
             url=f"boards/{board_id}/pins",
             params=params,
         )
@@ -176,7 +176,7 @@ class BoardsEndpoint(Endpoint):
         else:
             return PinsResponse.new_from_json_dict(data=data)
 
-    def list_sections(
+    async def list_sections(
         self,
         board_id: str,
         page_size: int = 25,
@@ -197,7 +197,7 @@ class BoardsEndpoint(Endpoint):
         if bookmark is not None:
             params["bookmark"] = bookmark
 
-        resp = self._get(
+        resp = await self._get(
             url=f"boards/{board_id}/sections",
             params=params,
         )
@@ -207,7 +207,7 @@ class BoardsEndpoint(Endpoint):
         else:
             return BoardSectionsResponse.new_from_json_dict(data=data)
 
-    def create_section(
+    async def create_section(
         self, board_id, name: str, return_json: bool = False
     ) -> Union[BoardSection, dict]:
         """
@@ -220,14 +220,14 @@ class BoardsEndpoint(Endpoint):
         :return: Board Section data.
         """
 
-        resp = self._post(url=f"boards/{board_id}/sections", json={"name": name})
+        resp = await self._post(url=f"boards/{board_id}/sections", json={"name": name})
         data = self._parse_response(response=resp)
         if return_json:
             return data
         else:
             return BoardSection.new_from_json_dict(data=data)
 
-    def update_section(
+    async def update_section(
         self, board_id, section_id, name: str, return_json: bool = False
     ) -> Union[BoardSection, dict]:
         """
@@ -240,7 +240,7 @@ class BoardsEndpoint(Endpoint):
         :param return_json: Type for returned data. If you set True JSON data will be returned.
         :return: Board Section data.
         """
-        resp = self._patch(
+        resp = await self._patch(
             url=f"boards/{board_id}/sections/{section_id}", json={"name": name}
         )
         data = self._parse_response(response=resp)
@@ -249,7 +249,7 @@ class BoardsEndpoint(Endpoint):
         else:
             return BoardSection.new_from_json_dict(data=data)
 
-    def delete_section(self, board_id, section_id: str) -> bool:
+    async def delete_section(self, board_id, section_id: str) -> bool:
         """
         Delete a board section on a board owned by the "operation user_account" -
         or on a group board that has been shared with this account.
@@ -258,12 +258,12 @@ class BoardsEndpoint(Endpoint):
         :param section_id: Unique identifier of a board section.
         :return: delete status
         """
-        resp = self._delete(url=f"boards/{board_id}/sections/{section_id}")
+        resp = await self._delete(url=f"boards/{board_id}/sections/{section_id}")
         if resp.is_success:
             return True
         self._parse_response(response=resp)
 
-    def list_section_pins(
+    async def list_section_pins(
         self,
         board_id,
         section_id: str,
@@ -286,7 +286,7 @@ class BoardsEndpoint(Endpoint):
         if bookmark is not None:
             params["bookmark"] = bookmark
 
-        resp = self._get(
+        resp = await self._get(
             url=f"boards/{board_id}/sections/{section_id}/pins",
             params=params,
         )

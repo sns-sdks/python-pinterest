@@ -4,11 +4,11 @@
 from typing import Optional, Union
 
 from pinterest.base_endpoint import AsyncEndpoint
-from pinterest.models import UserAccount, UserAccountAnalytics
+from pinterest.models import UserAccount, Analytics
 from pinterest.utils.params import enf_comma_separated
 
 
-class UserAccountEndpoint(AsyncEndpoint):
+class UserAccountAsyncEndpoint(AsyncEndpoint):
     async def get(
         self, ad_account_id: str = None, return_json: bool = False
     ) -> Union[UserAccount, dict]:
@@ -42,7 +42,7 @@ class UserAccountEndpoint(AsyncEndpoint):
         split_field: str = "NO_SPLIT",
         ad_account_id: Optional[str] = None,
         return_json: bool = False,
-    ) -> Union[UserAccountAnalytics, dict]:
+    ) -> Union[Analytics, dict]:
         """
         Get analytics for the "operation user_account"
 
@@ -80,4 +80,4 @@ class UserAccountEndpoint(AsyncEndpoint):
         if return_json:
             return data
         else:
-            return UserAccountAnalytics.new_from_json_dict(data=data)
+            return Analytics.new_from_json_dict(data=data)

@@ -4,7 +4,7 @@
 
 from typing import Optional, Union
 
-from pinterest.base_endpoint import Endpoint
+from pinterest.base_endpoint import AsyncEndpoint
 from pinterest.models import (
     MediaUpload,
     MediaUploadsResponse,
@@ -12,8 +12,8 @@ from pinterest.models import (
 )
 
 
-class MediaEndpoint(Endpoint):
-    def list(
+class MediaAsyncEndpoint(AsyncEndpoint):
+    async def list(
         self,
         page_size: int = 25,
         bookmark: Optional[str] = None,
@@ -30,7 +30,7 @@ class MediaEndpoint(Endpoint):
         if bookmark is not None:
             params["bookmark"] = bookmark
 
-        resp = self._get(
+        resp = await self._get(
             url="media",
             params=params,
         )
@@ -39,7 +39,7 @@ class MediaEndpoint(Endpoint):
             data if return_json else MediaUploadsResponse.new_from_json_dict(data=data)
         )
 
-    def register(
+    async def register(
         self, media_type: str, return_json: bool = False
     ) -> Union[RegisterMediaUploadResponse, dict]:
         """
@@ -52,7 +52,7 @@ class MediaEndpoint(Endpoint):
         :return: Response for register.
         """
         data = {"media_type": media_type}
-        resp = self._post(url="media", json=data)
+        resp = await self._post(url="media", json=data)
         data = self._parse_response(response=resp)
         return (
             data
@@ -60,7 +60,9 @@ class MediaEndpoint(Endpoint):
             else RegisterMediaUploadResponse.new_from_json_dict(data=data)
         )
 
-    def get(self, media_id: str, return_json: bool = False) -> Union[MediaUpload, dict]:
+    async def get(
+        self, media_id: str, return_json: bool = False
+    ) -> Union[MediaUpload, dict]:
         """
         Get details for a registered media upload, including its current status.
 
@@ -68,7 +70,7 @@ class MediaEndpoint(Endpoint):
         :param return_json: Type for returned data. If you set True JSON data will be returned.
         :return: Media Upload data.
         """
-        resp = self._post(url=f"media/{media_id}")
+        resp = await self._post(url=f"media/{media_id}")
         data = self._parse_response(response=resp)
         return (
             data

@@ -8,11 +8,7 @@ from dataclasses import dataclass, field
 from typing import List, Optional
 
 from .base import BaseModel
-
-
-@dataclass
-class Owner(BaseModel):
-    username: str = field(default=None)
+from .common import Owner
 
 
 @dataclass

@@ -66,9 +66,10 @@ class BaseApi:
 
 class Api(BaseApi):
     user_account = sync.UserAccountEndpoint()
-    board = sync.BoardsEndpoint()
+    boards = sync.BoardsEndpoint()
     pins = sync.PinsEndpoint()
     media = sync.MediaEndpoint()
+    ad_accounts = sync.AdAccountsEndpoint()
 
     def build_client(self):
         self.client = Client(
@@ -161,8 +162,11 @@ class Api(BaseApi):
 
 
 class AsyncApi(BaseApi):
-    pins = asynchronous.PinsEndpoint()
-    user_account = asynchronous.UserAccountEndpoint()
+    user_account = asynchronous.UserAccountAsyncEndpoint()
+    boards = asynchronous.BoardsAsyncEndpoint()
+    pins = asynchronous.PinsAsyncEndpoint()
+    media = asynchronous.MediaAsyncEndpoint()
+    ad_accounts = asynchronous.AdAccountsAsyncEndpoint()
 
     def build_client(self):
         self.client = AsyncClient(
