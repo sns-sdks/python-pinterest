@@ -1,5 +1,7 @@
 """
+    Models for media.
 
+    Refer: https://developers.pinterest.com/docs/api/v5/#tag/media
 """
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
