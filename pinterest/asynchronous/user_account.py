@@ -10,7 +10,7 @@ from pinterest.utils.params import enf_comma_separated
 
 class UserAccountAsyncEndpoint(AsyncEndpoint):
     async def get(
-        self, ad_account_id: str = None, return_json: bool = False
+        self, ad_account_id: Optional[str] = None, return_json: bool = False
     ) -> Union[UserAccount, dict]:
         """
         Get account information for the "operation user_account"
@@ -26,10 +26,7 @@ class UserAccountAsyncEndpoint(AsyncEndpoint):
             params=params,
         )
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return UserAccount.new_from_json_dict(data=data)
+        return data if return_json else UserAccount.new_from_json_dict(data=data)
 
     async def get_analytics(
         self,
@@ -77,7 +74,4 @@ class UserAccountAsyncEndpoint(AsyncEndpoint):
             params=params,
         )
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return Analytics.new_from_json_dict(data=data)
+        return data if return_json else Analytics.new_from_json_dict(data=data)

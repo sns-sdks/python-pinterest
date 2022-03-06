@@ -23,6 +23,8 @@ class BoardsEndpoint(Endpoint):
         return_json: bool = False,
     ) -> Union[BoardsResponse, dict]:
         """
+        Get a list of the boards owned by the "operation user_account" + group boards where this account is a collaborator
+
         :param page_size: Maximum number of items to include in a single page of the response. [1..100]
         :param bookmark: Cursor used to fetch the next page of items
         :param privacy: Privacy setting for a board.
@@ -36,18 +38,14 @@ class BoardsEndpoint(Endpoint):
         if privacy is not None:
             params["privacy"] = privacy
 
-        resp = self._get(
-            url=f"boards",
-            params=params,
-        )
+        resp = self._get(url=f"boards", params=params)
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return BoardsResponse.new_from_json_dict(data=data)
+        return data if return_json else BoardsResponse.new_from_json_dict(data=data)
 
     def get(self, board_id: str, return_json: bool = False) -> Union[Board, dict]:
         """
+        Get a board owned by the operation user_account - or a group board that has been shared with this account.
+
         :param board_id: Unique identifier of a board.
         :param return_json: Type for returned data. If you set True JSON data will be returned.
         :return: Board data.
@@ -55,10 +53,7 @@ class BoardsEndpoint(Endpoint):
 
         resp = self._get(url=f"boards/{board_id}")
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return Board.new_from_json_dict(data=data)
+        return data if return_json else Board.new_from_json_dict(data=data)
 
     def create(
         self,
@@ -81,15 +76,9 @@ class BoardsEndpoint(Endpoint):
             data["description"] = description
         if privacy is not None:
             data["privacy"] = privacy
-        resp = self._post(
-            url="boards",
-            json=data,
-        )
+        resp = self._post(url="boards", json=data)
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return Board.new_from_json_dict(data=data)
+        return data if return_json else Board.new_from_json_dict(data=data)
 
     def update(
         self,
@@ -123,15 +112,9 @@ class BoardsEndpoint(Endpoint):
                 code=-1, message="Update board need one of name,description,privacy"
             )
 
-        resp = self._patch(
-            url=f"boards/{board_id}",
-            json=data,
-        )
+        resp = self._patch(url=f"boards/{board_id}", json=data)
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return Board.new_from_json_dict(data=data)
+        return data if return_json else Board.new_from_json_dict(data=data)
 
     def delete(self, board_id: str) -> bool:
         """
@@ -166,15 +149,9 @@ class BoardsEndpoint(Endpoint):
         if bookmark is not None:
             params["bookmark"] = bookmark
 
-        resp = self._get(
-            url=f"boards/{board_id}/pins",
-            params=params,
-        )
+        resp = self._get(url=f"boards/{board_id}/pins", params=params)
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return PinsResponse.new_from_json_dict(data=data)
+        return data if return_json else PinsResponse.new_from_json_dict(data=data)
 
     def list_sections(
         self,
@@ -202,10 +179,9 @@ class BoardsEndpoint(Endpoint):
             params=params,
         )
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return BoardSectionsResponse.new_from_json_dict(data=data)
+        return (
+            data if return_json else BoardSectionsResponse.new_from_json_dict(data=data)
+        )
 
     def create_section(
         self, board_id, name: str, return_json: bool = False
@@ -222,10 +198,7 @@ class BoardsEndpoint(Endpoint):
 
         resp = self._post(url=f"boards/{board_id}/sections", json={"name": name})
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return BoardSection.new_from_json_dict(data=data)
+        return data if return_json else BoardSection.new_from_json_dict(data=data)
 
     def update_section(
         self, board_id, section_id, name: str, return_json: bool = False
@@ -244,10 +217,7 @@ class BoardsEndpoint(Endpoint):
             url=f"boards/{board_id}/sections/{section_id}", json={"name": name}
         )
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return BoardSection.new_from_json_dict(data=data)
+        return data if return_json else BoardSection.new_from_json_dict(data=data)
 
     def delete_section(self, board_id, section_id: str) -> bool:
         """
@@ -291,7 +261,4 @@ class BoardsEndpoint(Endpoint):
             params=params,
         )
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return PinsResponse.new_from_json_dict(data=data)
+        return data if return_json else PinsResponse.new_from_json_dict(data=data)

@@ -10,7 +10,7 @@ from pinterest.utils.params import enf_comma_separated
 
 class UserAccountEndpoint(Endpoint):
     def get(
-        self, ad_account_id: str = None, return_json: bool = False
+        self, ad_account_id: Optional[str] = None, return_json: bool = False
     ) -> Union[UserAccount, dict]:
         """
         Get account information for the "operation user_account"

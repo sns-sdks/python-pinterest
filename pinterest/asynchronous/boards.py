@@ -36,15 +36,9 @@ class BoardsAsyncEndpoint(AsyncEndpoint):
         if privacy is not None:
             params["privacy"] = privacy
 
-        resp = await self._get(
-            url=f"boards",
-            params=params,
-        )
+        resp = await self._get(url=f"boards", params=params)
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return BoardsResponse.new_from_json_dict(data=data)
+        return data if return_json else BoardsResponse.new_from_json_dict(data=data)
 
     async def get(self, board_id: str, return_json: bool = False) -> Union[Board, dict]:
         """
@@ -55,10 +49,7 @@ class BoardsAsyncEndpoint(AsyncEndpoint):
 
         resp = await self._get(url=f"boards/{board_id}")
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return Board.new_from_json_dict(data=data)
+        return data if return_json else Board.new_from_json_dict(data=data)
 
     async def create(
         self,
@@ -81,15 +72,9 @@ class BoardsAsyncEndpoint(AsyncEndpoint):
             data["description"] = description
         if privacy is not None:
             data["privacy"] = privacy
-        resp = await self._post(
-            url="boards",
-            json=data,
-        )
+        resp = await self._post(url="boards", json=data)
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return Board.new_from_json_dict(data=data)
+        return data if return_json else Board.new_from_json_dict(data=data)
 
     async def update(
         self,
@@ -123,15 +108,9 @@ class BoardsAsyncEndpoint(AsyncEndpoint):
                 code=-1, message="Update board need one of name,description,privacy"
             )
 
-        resp = await self._patch(
-            url=f"boards/{board_id}",
-            json=data,
-        )
+        resp = await self._patch(url=f"boards/{board_id}", json=data)
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return Board.new_from_json_dict(data=data)
+        return data if return_json else Board.new_from_json_dict(data=data)
 
     async def delete(self, board_id: str) -> bool:
         """
@@ -166,15 +145,9 @@ class BoardsAsyncEndpoint(AsyncEndpoint):
         if bookmark is not None:
             params["bookmark"] = bookmark
 
-        resp = await self._get(
-            url=f"boards/{board_id}/pins",
-            params=params,
-        )
+        resp = await self._get(url=f"boards/{board_id}/pins", params=params)
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return PinsResponse.new_from_json_dict(data=data)
+        return data if return_json else PinsResponse.new_from_json_dict(data=data)
 
     async def list_sections(
         self,
@@ -202,10 +175,9 @@ class BoardsAsyncEndpoint(AsyncEndpoint):
             params=params,
         )
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return BoardSectionsResponse.new_from_json_dict(data=data)
+        return (
+            data if return_json else BoardSectionsResponse.new_from_json_dict(data=data)
+        )
 
     async def create_section(
         self, board_id, name: str, return_json: bool = False
@@ -222,10 +194,7 @@ class BoardsAsyncEndpoint(AsyncEndpoint):
 
         resp = await self._post(url=f"boards/{board_id}/sections", json={"name": name})
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return BoardSection.new_from_json_dict(data=data)
+        return data if return_json else BoardSection.new_from_json_dict(data=data)
 
     async def update_section(
         self, board_id, section_id, name: str, return_json: bool = False
@@ -244,10 +213,7 @@ class BoardsAsyncEndpoint(AsyncEndpoint):
             url=f"boards/{board_id}/sections/{section_id}", json={"name": name}
         )
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return BoardSection.new_from_json_dict(data=data)
+        return data if return_json else BoardSection.new_from_json_dict(data=data)
 
     async def delete_section(self, board_id, section_id: str) -> bool:
         """
@@ -291,7 +257,4 @@ class BoardsAsyncEndpoint(AsyncEndpoint):
             params=params,
         )
         data = self._parse_response(response=resp)
-        if return_json:
-            return data
-        else:
-            return PinsResponse.new_from_json_dict(data=data)
+        return data if return_json else PinsResponse.new_from_json_dict(data=data)

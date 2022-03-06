@@ -48,7 +48,10 @@ class PinsAsyncEndpoint(AsyncEndpoint):
         return data if return_json else Pin.new_from_json_dict(data=data)
 
     async def get(
-        self, pin_id: str, ad_account_id: str = None, return_json: bool = False
+        self,
+        pin_id: str,
+        ad_account_id: Optional[str] = None,
+        return_json: bool = False,
     ) -> Union[Pin, dict]:
         """
         Get a Pin owned by the "operation user_account" - or on a group board that has been shared with this account.
