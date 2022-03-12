@@ -80,6 +80,7 @@ class BaseApi:
 class Api(BaseApi):
     user_account = sync.UserAccountEndpoint()
     boards = sync.BoardsEndpoint()
+    catalogs = sync.CatalogsEndpoint()
     pins = sync.PinsEndpoint()
     media = sync.MediaEndpoint()
     ad_accounts = sync.AdAccountsEndpoint()
@@ -214,6 +215,7 @@ class Api(BaseApi):
 class AsyncApi(BaseApi):
     user_account = asynchronous.UserAccountAsyncEndpoint()
     boards = asynchronous.BoardsAsyncEndpoint()
+    catalogs = asynchronous.CatalogsEndpoint()
     pins = asynchronous.PinsAsyncEndpoint()
     media = asynchronous.MediaAsyncEndpoint()
     ad_accounts = asynchronous.AdAccountsAsyncEndpoint()
