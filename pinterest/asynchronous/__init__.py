@@ -1,5 +1,6 @@
 from pinterest.asynchronous.ad_accounts import AdAccountsAsyncEndpoint
 from pinterest.asynchronous.boards import BoardsAsyncEndpoint
+from pinterest.asynchronous.catalogs import CatalogsEndpoint
 from pinterest.asynchronous.media import MediaAsyncEndpoint
 from pinterest.asynchronous.pins import PinsAsyncEndpoint
 from pinterest.asynchronous.user_account import UserAccountAsyncEndpoint
