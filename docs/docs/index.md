@@ -1,17 +1,13 @@
-# Welcome to MkDocs
+# Welcome to Python-Pinterest’s documentation!
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+A Python wrapper around for Pinterest API V5 :sparkles: :cake: :sparkles:.
 
-## Commands
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+## Introduction
 
-## Project layout
+[Pinterest API (v5)](https://developers.pinterest.com/docs/api/v5/) is now in beta.
+This library provides a Python interface for this version API. Library work on Python 3.6+, and support for `sync`, `async`.
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+!!! tip "Tips"
+
+    This library only have apis for v5, not contains older api.

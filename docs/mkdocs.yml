@@ -1,7 +1,7 @@
-site_name: Mod Docs
-site_description: Docs for Mod
-repo_url: https://github.com/MerleLiuKun/PyModuleRepo
-copyright: Copyright &copy; 2021 Ikaros kun
+site_name: Python Pinterest Docs
+site_description: Docs for Python Pinterest
+repo_url: https://github.com/sns-sdks/python-pinterest
+copyright: Copyright &copy; 2022 Ikaros kun
 
 theme:
   name: material
@@ -28,13 +28,17 @@ theme:
 
 nav:
   - Introduction: index.md
+  - Installation: installation.md
+  - Authorization: authorization.md
+  - Usage: usage.md
+  - Changelog: CHANGELOG.md
 
 extra:
   social:
     - icon: fontawesome/brands/twitter
       link: https://twitter.com/realllkk520
     - icon: fontawesome/brands/github
-      link: https://github.com/MerleLiuKun/PyModuleRepo
+      link: https://github.com/sns-sdks/python-pinterest
 
 
 markdown_extensions:
