@@ -5,13 +5,14 @@
 """
 
 from dataclasses import dataclass, field
+from typing import Optional
 
 from .base import BaseModel
 
 
 @dataclass
 class UserAccount(BaseModel):
-    username: str = field(default=None)
-    account_type: str = field(default=None)
-    profile_image: str = field(default=None, repr=False)
-    website_url: str = field(default=None, repr=False)
+    username: Optional[str] = field(default=None)
+    account_type: Optional[str] = field(default=None)
+    profile_image: Optional[str] = field(default=None, repr=False)
+    website_url: Optional[str] = field(default=None, repr=False)

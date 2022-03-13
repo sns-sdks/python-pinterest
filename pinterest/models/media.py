@@ -11,9 +11,9 @@ from .base import BaseModel
 
 @dataclass
 class MediaUpload(BaseModel):
-    media_id: str = field(default=None)
-    media_type: str = field(default=None)
-    status: str = field(default=None)
+    media_id: Optional[str] = field(default=None)
+    media_type: Optional[str] = field(default=None)
+    status: Optional[str] = field(default=None)
 
 
 @dataclass
@@ -24,7 +24,7 @@ class MediaUploadsResponse(BaseModel):
 
 @dataclass
 class RegisterMediaUploadResponse(BaseModel):
-    media_id: str = field(default=None)
-    media_type: str = field(default=None)
-    upload_url: str = field(default=None)
-    upload_parameters: Dict[str, str] = field(default=None)
+    media_id: Optional[str] = field(default=None)
+    media_type: Optional[str] = field(default=None)
+    upload_url: Optional[str] = field(default=None)
+    upload_parameters: Optional[Dict[str, str]] = field(default=None)

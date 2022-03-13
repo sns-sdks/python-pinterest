@@ -12,11 +12,11 @@ from .base import BaseModel
 
 @dataclass
 class AdAccount(BaseModel):
-    id: str = field(default=None)
-    name: str = field(default=None)
-    owner: str = field(default=None)
-    country: str = field(default=None)
-    currency: str = field(default=None)
+    id: Optional[str] = field(default=None)
+    name: Optional[str] = field(default=None)
+    owner: Optional[str] = field(default=None)
+    country: Optional[str] = field(default=None)
+    currency: Optional[str] = field(default=None)
 
 
 @dataclass
@@ -36,20 +36,20 @@ class TrackingURL(BaseModel):
 
 @dataclass
 class Campaign(BaseModel):
-    id: str = field(default=None)
-    ad_account_id: str = field(default=None)
-    name: str = field(default=None)
-    status: str = field(default=None)
-    lifetime_spend_cap: int = field(default=None, repr=False)
-    daily_spend_cap: int = field(default=None, repr=False)
-    order_line_id: str = field(default=None, repr=False)
-    tracking_urls: TrackingURL = field(default=None, repr=False)
-    start_time: int = field(default=None, repr=False)
-    end_time: int = field(default=None, repr=False)
-    objective_type: str = field(default=None, repr=False)
-    created_time: int = field(default=None, repr=False)
-    updated_time: int = field(default=None, repr=False)
-    type: str = field(default=None, repr=False)
+    id: Optional[str] = field(default=None)
+    ad_account_id: Optional[str] = field(default=None)
+    name: Optional[str] = field(default=None)
+    status: Optional[str] = field(default=None)
+    lifetime_spend_cap: Optional[int] = field(default=None, repr=False)
+    daily_spend_cap: Optional[int] = field(default=None, repr=False)
+    order_line_id: Optional[str] = field(default=None, repr=False)
+    tracking_urls: Optional[TrackingURL] = field(default=None, repr=False)
+    start_time: Optional[int] = field(default=None, repr=False)
+    end_time: Optional[int] = field(default=None, repr=False)
+    objective_type: Optional[str] = field(default=None, repr=False)
+    created_time: Optional[int] = field(default=None, repr=False)
+    updated_time: Optional[int] = field(default=None, repr=False)
+    type: Optional[str] = field(default=None, repr=False)
 
 
 @dataclass
@@ -60,17 +60,17 @@ class CampaignsResponse(BaseModel):
 
 @dataclass
 class AdGroup(BaseModel):
-    id: str = field(default=None)
-    ad_account_id: str = field(default=None, repr=False)
-    campaign_id: str = field(default=None, repr=False)
-    name: str = field(default=None)
-    status: str = field(default=None)
-    budget_in_micro_currency: int = field(default=None, repr=False)
-    bid_in_micro_currency: int = field(default=None, repr=False)
-    budget_type: str = field(default=None, repr=False)
-    start_time: int = field(default=None, repr=False)
-    end_time: int = field(default=None, repr=False)
-    targeting_spec: Dict = field(default=None, repr=False)
+    id: Optional[str] = field(default=None)
+    ad_account_id: Optional[str] = field(default=None, repr=False)
+    campaign_id: Optional[str] = field(default=None, repr=False)
+    name: Optional[str] = field(default=None)
+    status: Optional[str] = field(default=None)
+    budget_in_micro_currency: Optional[int] = field(default=None, repr=False)
+    bid_in_micro_currency: Optional[int] = field(default=None, repr=False)
+    budget_type: Optional[str] = field(default=None, repr=False)
+    start_time: Optional[int] = field(default=None, repr=False)
+    end_time: Optional[int] = field(default=None, repr=False)
+    targeting_spec: Optional[Dict] = field(default=None, repr=False)
     lifetime_frequency_cap: Optional[int] = field(default=None, repr=False)
     tracking_urls: Optional[TrackingURL] = field(default=None, repr=False)
     auto_targeting_enabled: Optional[bool] = field(default=None, repr=False)

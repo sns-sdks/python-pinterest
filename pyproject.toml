@@ -38,6 +38,8 @@ pytest = "^7.0.0"
 pytest-cov = "^3.0.0"
 bump2version = "^1.0.1"
 black = "^22.1.0"
+respx = "^0.19.2"
+anyio = "^3.5.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

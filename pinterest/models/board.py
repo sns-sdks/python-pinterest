@@ -13,11 +13,11 @@ from .common import Owner
 
 @dataclass
 class Board(BaseModel):
-    id: str = field(default=None)
-    name: str = field(default=None)
+    id: Optional[str] = field(default=None)
+    name: Optional[str] = field(default=None)
     description: Optional[str] = field(default=None, repr=False)
-    owner: Owner = field(default=None, repr=False)
-    privacy: str = field(default=None, repr=False)
+    owner: Optional[Owner] = field(default=None, repr=False)
+    privacy: Optional[str] = field(default=None, repr=False)
 
 
 @dataclass
@@ -28,8 +28,8 @@ class BoardsResponse(BaseModel):
 
 @dataclass
 class BoardSection(BaseModel):
-    id: str = field(default=None)
-    name: str = field(default=None)
+    id: Optional[str] = field(default=None)
+    name: Optional[str] = field(default=None)
 
 
 @dataclass
