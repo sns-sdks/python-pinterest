@@ -18,6 +18,7 @@ This library provides a service to easily use Pinterest REST API for v5.x.
 
 And support ``Async`` And ``sync`` mode.
 
+More docs has published on https://sns-sdks.lkhardy.cn/python-pinterest/
 
 Using
 =====
@@ -48,9 +49,9 @@ Get pin info::
     >>> await ap.pins.get(pin_id="1022106077902810180")
     # Pin(id='1022106077902810180', created_at='2022-02-14T02:54:38')
 
+More docs has published on https://sns-sdks.lkhardy.cn/python-pinterest/
 
 TODO
 ====
 
-- Docs
 - Tests
