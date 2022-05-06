@@ -2,7 +2,7 @@
     Catalogs endpoint implementation.
 """
 
-from typing import Optional, Union
+from typing import List, Optional, Union
 
 from pinterest.base_endpoint import AsyncEndpoint
 from pinterest.exceptions import PinterestException
@@ -10,6 +10,8 @@ from pinterest.models import (
     CatalogFeed,
     CatalogFeedsResponse,
     CatalogFeedProcessResultsResponse,
+    CatalogItemsResponse,
+    CatalogItemProcessingRecordResponse,
 )
 
 
@@ -189,4 +191,83 @@ class CatalogsEndpoint(AsyncEndpoint):
             data
             if return_json
             else CatalogFeedProcessResultsResponse.new_from_json_dict(data=data)
+        )
+
+    async def get_catalogs_items(
+        self,
+        country: str,
+        item_ids: List[str],
+        language: str,
+        return_json: bool = False,
+    ) -> Union[CatalogItemsResponse, dict]:
+        """
+        Get the items of the catalog created by the "operating user_account"
+
+        :param country: Country for the Catalogs Items.
+        :param item_ids: Catalogs Item ids.
+        :param language: Language for the Catalogs Items.
+        :param return_json: Type for returned data. If you set True JSON data will be returned.
+        :return: Catalogs items data.
+        """
+        resp = await self._get(
+            url="catalogs/items",
+            params={
+                "country": country,
+                "item_ids": item_ids,
+                "language": language,
+            },
+        )
+        data = self._parse_response(response=resp)
+        return data if return_json else CatalogItemsResponse.new_from_json_dict(data)
+
+    async def get_catalogs_items_batch(
+        self,
+        batch_id: str,
+        return_json: bool = False,
+    ) -> Union[CatalogItemProcessingRecordResponse, dict]:
+        """
+        Get a single catalogs items batch created by the "operating user_account".
+
+        :param batch_id: ID of a catalogs items batch to fetch.
+        :param return_json: Type for returned data. If you set True JSON data will be returned.
+        :return: Item processing records data.
+        """
+        resp = await self._get(url=f"catalogs/items/batch/{batch_id}")
+        data = self._parse_response(response=resp)
+        return (
+            data
+            if return_json
+            else CatalogItemProcessingRecordResponse.new_from_json_dict(data)
+        )
+
+    async def perform_items_batch(
+        self,
+        operation: str,
+        items: List[dict],
+        country: Optional[str] = None,
+        language: Optional[str] = None,
+        return_json: bool = False,
+    ) -> Union[CatalogItemProcessingRecordResponse, dict]:
+        """
+        This endpoint supports multiple operations on a set of one or more catalog items.
+
+        :param operation: The operation performed by the batch, Enum: "UPDATE" "CREATE" "UPSERT"
+        :param items: Array with catalogs items.
+        :param country: Country ID from ISO 3166-1 alpha-2.
+        :param language: Language code, which is among the offical ISO 639-1 language list.
+        :param return_json: Type for returned data. If you set True JSON data will be returned.
+        :return: Item processing records data.
+        """
+        data = {"operation": operation, "items": items}
+        if country is not None:
+            data["country"] = country
+        if language is not None:
+            data["language"] = language
+
+        resp = await self._post(url="catalogs/items/batch", json=data)
+        data = self._parse_response(response=resp)
+        return (
+            data
+            if return_json
+            else CatalogItemProcessingRecordResponse.new_from_json_dict(data)
         )
