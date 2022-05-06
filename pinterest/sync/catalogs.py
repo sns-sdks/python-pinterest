@@ -2,7 +2,7 @@
     Catalogs endpoint implementation.
 """
 
-from typing import Optional, Union
+from typing import List, Optional, Union
 
 from pinterest.base_endpoint import Endpoint
 from pinterest.exceptions import PinterestException
@@ -10,11 +10,13 @@ from pinterest.models import (
     CatalogFeed,
     CatalogFeedsResponse,
     CatalogFeedProcessResultsResponse,
+    CatalogItemsResponse,
+    CatalogItemProcessingRecordResponse,
 )
 
 
 class CatalogsEndpoint(Endpoint):
-    def list_feeds(
+    def list_catalogs_feeds(
         self,
         page_size: int = 25,
         bookmark: Optional[str] = None,
@@ -37,15 +39,15 @@ class CatalogsEndpoint(Endpoint):
             data if return_json else CatalogFeedsResponse.new_from_json_dict(data=data)
         )
 
-    def create_feed(
+    def create_catalogs_feed(
         self,
-        country: str,
+        name: str,
         format: str,
-        locale: str,
         location: str,
+        default_country: Optional[str] = None,
         default_availability: Optional[str] = None,
         default_currency: Optional[str] = None,
-        name: Optional[str] = None,
+        default_locale: Optional[str] = None,
         credentials: Optional[dict] = None,
         preferred_processing_schedule: Optional[dict] = None,
         return_json: bool = False,
@@ -53,24 +55,28 @@ class CatalogsEndpoint(Endpoint):
         """
         Create a new feed owned by the "operating user_account".
 
-        :param country: Country ID from ISO 3166-1 alpha-2.
+        :param name: A human-friendly name associated to a given feed.
         :param format: The file format of a feed. Enum: "TSV" "CSV" "XML"
-        :param locale: The locale used within a feed for product descriptions.
         :param location: The URL where a feed is available for download. This URL is what Pinterest will use to download a feed for processing.
+        :param default_country: Country ID from ISO 3166-1 alpha-2.
         :param default_availability: Default availability for products in a feed.
         :param default_currency: Currency Codes from ISO 4217.
-        :param name: A human-friendly name associated to a given feed.
+        :param default_locale: The locale used within a feed for product descriptions.
         :param credentials: Use this if your feed file requires username and password.
         :param preferred_processing_schedule:
         :param return_json: Type for returned data. If you set True JSON data will be returned.
         :return: CatalogFeed data.
         """
         data = {
-            "country": country,
+            "name": name,
             "format": format,
-            "locale": locale,
+            "": default_locale,
             "location": location,
         }
+        if default_country is not None:
+            data["default_country"] = default_country
+        if default_locale is not None:
+            data["default_locale"] = default_locale
         if credentials is not None:
             data["credentials"] = credentials
         if preferred_processing_schedule is not None:
@@ -79,13 +85,11 @@ class CatalogsEndpoint(Endpoint):
             data["default_availability"] = default_availability
         if default_currency is not None:
             data["default_currency"] = default_currency
-        if name is not None:
-            data["name"] = name
-        resp = self._post(url="boards", json=data)
+        resp = self._post(url="catalogs/feeds", json=data)
         data = self._parse_response(response=resp)
         return data if return_json else CatalogFeed.new_from_json_dict(data=data)
 
-    def get_feed(
+    def get_catalogs_feed(
         self, feed_id: str, return_json: bool = False
     ) -> Union[CatalogFeed, dict]:
         """
@@ -99,7 +103,7 @@ class CatalogsEndpoint(Endpoint):
         data = self._parse_response(response=resp)
         return data if return_json else CatalogFeed.new_from_json_dict(data=data)
 
-    def update_feed(
+    def update_catalogs_feed(
         self,
         feed_id: str,
         default_availability: Optional[str] = None,
@@ -107,6 +111,7 @@ class CatalogsEndpoint(Endpoint):
         name: Optional[str] = None,
         format: Optional[str] = None,
         location: Optional[str] = None,
+        status: Optional[str] = None,
         credentials: Optional[dict] = None,
         preferred_processing_schedule: Optional[dict] = None,
         return_json: bool = False,
@@ -120,6 +125,7 @@ class CatalogsEndpoint(Endpoint):
         :param name: A human-friendly name associated to a given feed.
         :param format: The file format of a feed. Enum: "TSV" "CSV" "XML"
         :param location: The URL where a feed is available for download. This URL is what Pinterest will use to download a feed for processing.
+        :param status: Status for catalogs entities. Present in catalogs_feed values. When a feed is deleted, the response will inform DELETED as status.
         :param credentials: Use this if your feed file requires username and password.
         :param preferred_processing_schedule: Optional daily processing schedule. Use this to configure the preferred time for processing a feed (otherwise random).
         :param return_json: Type for returned data. If you set True JSON data will be returned.
@@ -137,6 +143,8 @@ class CatalogsEndpoint(Endpoint):
             data["format"] = format
         if location is not None:
             data["location"] = location
+        if status is not None:
+            data["status"] = status
         if credentials is not None:
             data["credentials"] = credentials
         if preferred_processing_schedule is not None:
@@ -150,7 +158,7 @@ class CatalogsEndpoint(Endpoint):
         data = self._parse_response(response=resp)
         return data if return_json else CatalogFeed.new_from_json_dict(data=data)
 
-    def delete(self, feed_id: str) -> bool:
+    def delete_catalogs_feed(self, feed_id: str) -> bool:
         """
         Delete a feed owned by the "operating user_account".
 
@@ -162,7 +170,7 @@ class CatalogsEndpoint(Endpoint):
             return True
         self._parse_response(response=resp)
 
-    def list_feed_processing_results(
+    def list_catalogs_feed_processing_results(
         self,
         feed_id: str,
         page_size: int = 25,
@@ -189,4 +197,83 @@ class CatalogsEndpoint(Endpoint):
             data
             if return_json
             else CatalogFeedProcessResultsResponse.new_from_json_dict(data=data)
+        )
+
+    def get_catalogs_items(
+        self,
+        country: str,
+        item_ids: List[str],
+        language: str,
+        return_json: bool = False,
+    ) -> Union[CatalogItemsResponse, dict]:
+        """
+        Get the items of the catalog created by the "operating user_account"
+
+        :param country: Country for the Catalogs Items.
+        :param item_ids: Catalogs Item ids.
+        :param language: Language for the Catalogs Items.
+        :param return_json: Type for returned data. If you set True JSON data will be returned.
+        :return: Catalogs items data.
+        """
+        resp = self._get(
+            url="catalogs/items",
+            params={
+                "country": country,
+                "item_ids": item_ids,
+                "language": language,
+            },
+        )
+        data = self._parse_response(response=resp)
+        return data if return_json else CatalogItemsResponse.new_from_json_dict(data)
+
+    def get_catalogs_items_batch(
+        self,
+        batch_id: str,
+        return_json: bool = False,
+    ) -> Union[CatalogItemProcessingRecordResponse, dict]:
+        """
+        Get a single catalogs items batch created by the "operating user_account".
+
+        :param batch_id: ID of a catalogs items batch to fetch.
+        :param return_json: Type for returned data. If you set True JSON data will be returned.
+        :return: Item processing records data.
+        """
+        resp = self._get(url=f"catalogs/items/batch/{batch_id}")
+        data = self._parse_response(response=resp)
+        return (
+            data
+            if return_json
+            else CatalogItemProcessingRecordResponse.new_from_json_dict(data)
+        )
+
+    def perform_items_batch(
+        self,
+        operation: str,
+        items: List[dict],
+        country: Optional[str] = None,
+        language: Optional[str] = None,
+        return_json: bool = False,
+    ) -> Union[CatalogItemProcessingRecordResponse, dict]:
+        """
+        This endpoint supports multiple operations on a set of one or more catalog items.
+
+        :param operation: The operation performed by the batch, Enum: "UPDATE" "CREATE" "UPSERT"
+        :param items: Array with catalogs items.
+        :param country: Country ID from ISO 3166-1 alpha-2.
+        :param language: Language code, which is among the offical ISO 639-1 language list.
+        :param return_json: Type for returned data. If you set True JSON data will be returned.
+        :return: Item processing records data.
+        """
+        data = {"operation": operation, "items": items}
+        if country is not None:
+            data["country"] = country
+        if language is not None:
+            data["language"] = language
+
+        resp = self._post(url="catalogs/items/batch", json=data)
+        data = self._parse_response(response=resp)
+        return (
+            data
+            if return_json
+            else CatalogItemProcessingRecordResponse.new_from_json_dict(data)
         )

@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 from pinterest import Api, AsyncApi
@@ -11,3 +13,15 @@ def api():
 @pytest.fixture
 def async_api():
     return AsyncApi(access_token="access token")
+
+
+class Helpers:
+    @staticmethod
+    def load_data(filename):
+        with open(filename, "rb") as f:
+            return json.loads(f.read().decode("utf-8"))
+
+
+@pytest.fixture
+def helpers():
+    return Helpers

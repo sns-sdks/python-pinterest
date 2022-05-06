@@ -192,5 +192,88 @@ class CatalogFeedProcessResult(BaseModel):
 
 @dataclass
 class CatalogFeedProcessResultsResponse(BaseModel):
-    items: List[CatalogFeedProcessResult] = field(default=None)
+    items: Optional[List[CatalogFeedProcessResult]] = field(default=None)
     bookmark: Optional[str] = field(default=None)
+
+
+@dataclass
+class CatalogItemAttributes(BaseModel):
+    ad_link: Optional[str] = field(default=None)
+    additional_image_link: Optional[List[str]] = field(default=None)
+    adult: Optional[bool] = field(default=None)
+    age_group: Optional[str] = field(default=None)
+    availability: Optional[str] = field(default=None)
+    average_review_rating: Optional[int] = field(default=None)
+    brand: Optional[str] = field(default=None)
+    color: Optional[str] = field(default=None)
+    condition: Optional[str] = field(default=None)
+    custom_label_0: Optional[str] = field(default=None)
+    custom_label_1: Optional[str] = field(default=None)
+    custom_label_2: Optional[str] = field(default=None)
+    custom_label_3: Optional[str] = field(default=None)
+    custom_label_4: Optional[str] = field(default=None)
+    description: Optional[str] = field(default=None)
+    free_shipping_label: Optional[bool] = field(default=None)
+    free_shipping_limit: Optional[str] = field(default=None)
+    gender: Optional[str] = field(default=None)
+    google_product_category: Optional[str] = field(default=None)
+    gtin: Optional[int] = field(default=None)
+    id: Optional[str] = field(default=None)
+    image_link: Optional[List[str]] = field(default=None)
+    item_group_id: Optional[str] = field(default=None)
+    last_updated_time: Optional[int] = field(default=None)
+    link: Optional[str] = field(default=None)
+    material: Optional[str] = field(default=None)
+    min_ad_price: Optional[str] = field(default=None)
+    mobile_link: Optional[str] = field(default=None)
+    mpn: Optional[str] = field(default=None)
+    number_of_ratings: Optional[int] = field(default=None)
+    number_of_reviews: Optional[int] = field(default=None)
+    pattern: Optional[str] = field(default=None)
+    price: Optional[str] = field(default=None)
+    product_type: Optional[str] = field(default=None)
+    sale_price: Optional[str] = field(default=None)
+    shipping: Optional[str] = field(default=None)
+    shipping_height: Optional[str] = field(default=None)
+    shipping_weight: Optional[str] = field(default=None)
+    shipping_width: Optional[str] = field(default=None)
+    size: Optional[str] = field(default=None)
+    size_system: Optional[str] = field(default=None)
+    size_type: Optional[str] = field(default=None)
+    tax: Optional[str] = field(default=None)
+    title: Optional[str] = field(default=None)
+
+
+@dataclass
+class CatalogItem(BaseModel):
+    item_id: Optional[str] = field(default=None)
+    attributes: Optional[CatalogItemAttributes] = field(default=None)
+
+
+@dataclass
+class CatalogItemsResponse(BaseModel):
+    items: Optional[List[CatalogItem]] = field(default=None)
+
+
+@dataclass
+class CatalogItemValidationEvent(BaseModel):
+    attribute: Optional[str] = field(default=None)
+    code: Optional[int] = field(default=None)
+    message: Optional[str] = field(default=None)
+
+
+@dataclass
+class CatalogItemProcessingRecord(BaseModel):
+    item_id: Optional[str] = field(default=None)
+    errors: Optional[List[CatalogItemValidationEvent]] = field(default=None)
+    warnings: Optional[List[CatalogItemValidationEvent]] = field(default=None)
+    status: Optional[str] = field(default=None)
+
+
+@dataclass
+class CatalogItemProcessingRecordResponse(BaseModel):
+    items: Optional[List[CatalogItemProcessingRecord]] = field(default=None)
+    batch_id: Optional[str] = field(default=None)
+    created_time: Optional[str] = field(default=None)
+    completed_time: Optional[str] = field(default=None)
+    status: Optional[str] = field(default=None)
