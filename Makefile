@@ -36,10 +36,10 @@ clean-test:
 	rm -fr htmlcov/
 
 cov-term: clean-pyc
-	pytest -s --cov=pytwitter --cov-report term
+	pytest -s --cov=pinterest --cov-report term
 
 cov-html: clean-pyc
-	pytest -s --cov=pytwitter --cov-report html
+	pytest -s --cov=pinterest --cov-report html
 
 lint:
 	black .

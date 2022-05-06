@@ -16,7 +16,7 @@ from pinterest.models import (
 
 
 class CatalogsEndpoint(AsyncEndpoint):
-    async def list_feeds(
+    async def list_catalogs_feeds(
         self,
         page_size: int = 25,
         bookmark: Optional[str] = None,
@@ -39,15 +39,15 @@ class CatalogsEndpoint(AsyncEndpoint):
             data if return_json else CatalogFeedsResponse.new_from_json_dict(data=data)
         )
 
-    async def create_feed(
+    async def create_catalogs_feed(
         self,
-        country: str,
+        name: str,
         format: str,
-        locale: str,
         location: str,
+        default_country: Optional[str] = None,
         default_availability: Optional[str] = None,
         default_currency: Optional[str] = None,
-        name: Optional[str] = None,
+        default_locale: Optional[str] = None,
         credentials: Optional[dict] = None,
         preferred_processing_schedule: Optional[dict] = None,
         return_json: bool = False,
@@ -55,24 +55,28 @@ class CatalogsEndpoint(AsyncEndpoint):
         """
         Create a new feed owned by the "operating user_account".
 
-        :param country: Country ID from ISO 3166-1 alpha-2.
+        :param name: A human-friendly name associated to a given feed.
         :param format: The file format of a feed. Enum: "TSV" "CSV" "XML"
-        :param locale: The locale used within a feed for product descriptions.
         :param location: The URL where a feed is available for download. This URL is what Pinterest will use to download a feed for processing.
+        :param default_country: Country ID from ISO 3166-1 alpha-2.
         :param default_availability: Default availability for products in a feed.
         :param default_currency: Currency Codes from ISO 4217.
-        :param name: A human-friendly name associated to a given feed.
+        :param default_locale: The locale used within a feed for product descriptions.
         :param credentials: Use this if your feed file requires username and password.
         :param preferred_processing_schedule:
         :param return_json: Type for returned data. If you set True JSON data will be returned.
         :return: CatalogFeed data.
         """
         data = {
-            "country": country,
+            "name": name,
             "format": format,
-            "locale": locale,
+            "": default_locale,
             "location": location,
         }
+        if default_country is not None:
+            data["default_country"] = default_country
+        if default_locale is not None:
+            data["default_locale"] = default_locale
         if credentials is not None:
             data["credentials"] = credentials
         if preferred_processing_schedule is not None:
@@ -81,13 +85,11 @@ class CatalogsEndpoint(AsyncEndpoint):
             data["default_availability"] = default_availability
         if default_currency is not None:
             data["default_currency"] = default_currency
-        if name is not None:
-            data["name"] = name
-        resp = await self._post(url="boards", json=data)
+        resp = await self._post(url="catalogs/feeds", json=data)
         data = self._parse_response(response=resp)
         return data if return_json else CatalogFeed.new_from_json_dict(data=data)
 
-    async def get_feed(
+    async def get_catalogs_feed(
         self, feed_id: str, return_json: bool = False
     ) -> Union[CatalogFeed, dict]:
         """
@@ -101,7 +103,7 @@ class CatalogsEndpoint(AsyncEndpoint):
         data = self._parse_response(response=resp)
         return data if return_json else CatalogFeed.new_from_json_dict(data=data)
 
-    async def update_feed(
+    async def update_catalogs_feed(
         self,
         feed_id: str,
         default_availability: Optional[str] = None,
@@ -109,6 +111,7 @@ class CatalogsEndpoint(AsyncEndpoint):
         name: Optional[str] = None,
         format: Optional[str] = None,
         location: Optional[str] = None,
+        status: Optional[str] = None,
         credentials: Optional[dict] = None,
         preferred_processing_schedule: Optional[dict] = None,
         return_json: bool = False,
@@ -122,6 +125,7 @@ class CatalogsEndpoint(AsyncEndpoint):
         :param name: A human-friendly name associated to a given feed.
         :param format: The file format of a feed. Enum: "TSV" "CSV" "XML"
         :param location: The URL where a feed is available for download. This URL is what Pinterest will use to download a feed for processing.
+        :param status: Status for catalogs entities. Present in catalogs_feed values. When a feed is deleted, the response will inform DELETED as status.
         :param credentials: Use this if your feed file requires username and password.
         :param preferred_processing_schedule: Optional daily processing schedule. Use this to configure the preferred time for processing a feed (otherwise random).
         :param return_json: Type for returned data. If you set True JSON data will be returned.
@@ -139,6 +143,8 @@ class CatalogsEndpoint(AsyncEndpoint):
             data["format"] = format
         if location is not None:
             data["location"] = location
+        if status is not None:
+            data["status"] = status
         if credentials is not None:
             data["credentials"] = credentials
         if preferred_processing_schedule is not None:
@@ -152,7 +158,7 @@ class CatalogsEndpoint(AsyncEndpoint):
         data = self._parse_response(response=resp)
         return data if return_json else CatalogFeed.new_from_json_dict(data=data)
 
-    async def delete(self, feed_id: str) -> bool:
+    async def delete_catalogs_feed(self, feed_id: str) -> bool:
         """
         Delete a feed owned by the "operating user_account".
 
@@ -164,7 +170,7 @@ class CatalogsEndpoint(AsyncEndpoint):
             return True
         self._parse_response(response=resp)
 
-    async def list_feed_processing_results(
+    async def list_catalogs_feed_processing_results(
         self,
         feed_id: str,
         page_size: int = 25,
