@@ -350,7 +350,7 @@ class CatalogsEndpoint(AsyncEndpoint):
             data["filters"] = filters
         if description is not None:
             data["description"] = description
-        resp = await self._post(
+        resp = await self._patch(
             url=f"catalogs/product_groups/{product_group_id}", json=data
         )
         data = self._parse_response(resp)

@@ -189,6 +189,85 @@ def test_perform_items_batch(api, helpers):
 
 
 @respx.mock
+def test_get_product_group(api, helpers):
+    product_group_id = "443727193917"
+    respx.get(
+        f"{pin.Api.DEFAULT_API_URL}catalogs/product_groups/{product_group_id}"
+    ).respond(
+        status_code=200,
+        json=helpers.load_data("tests/data/catalogs/get_product_group_resp.json"),
+    )
+    pg = api.catalogs.get_product_group(product_group_id=product_group_id)
+    assert pg.name == "Most Popular"
+
+
+@respx.mock
+def test_create_product_group(api, helpers):
+    respx.post(f"{pin.Api.DEFAULT_API_URL}catalogs/product_groups").respond(
+        status_code=200,
+        json=helpers.load_data("tests/data/catalogs/create_product_group_resp.json"),
+    )
+    pg = api.catalogs.create_product_group(
+        feed_id="2680059592705",
+        name="Most Popular",
+        filters={
+            "any_of": [{"MIN_PRICE": {"inclusion": True, "values": 0, "negated": True}}]
+        },
+        description="string",
+    )
+    assert pg.name == "Most Popular"
+
+
+@respx.mock
+def test_update_product_group(api, helpers):
+    product_group_id = "443727193917"
+    respx.patch(
+        f"{pin.Api.DEFAULT_API_URL}catalogs/product_groups/{product_group_id}"
+    ).respond(
+        status_code=200,
+        json=helpers.load_data("tests/data/catalogs/update_product_group_resp.json"),
+    )
+    pg = api.catalogs.update_product_group(
+        product_group_id=product_group_id,
+        feed_id="2680059592705",
+        name="Most Popular",
+        description="string",
+        filters={
+            "any_of": [{"MIN_PRICE": {"inclusion": True, "values": 0, "negated": True}}]
+        },
+    )
+    assert pg.id == product_group_id
+
+
+@respx.mock
+def test_delete_product_group(api, helpers):
+    product_group_id = "443727193917"
+    respx.delete(
+        f"{pin.Api.DEFAULT_API_URL}catalogs/product_groups/{product_group_id}"
+    ).respond(
+        status_code=204,
+        json={"code": 0, "message": "string"},
+    )
+    st = api.catalogs.delete_product_group(product_group_id=product_group_id)
+    assert st
+
+
+@respx.mock
+def test_get_product_group_list(api, helpers):
+    feed_id = "2680059592705"
+    respx.get(f"{pin.Api.DEFAULT_API_URL}catalogs/product_groups").respond(
+        status_code=200,
+        json=helpers.load_data("tests/data/catalogs/get_product_groups_list_resp.json"),
+    )
+    pgs = api.catalogs.get_product_group_list(
+        feed_id=feed_id,
+        page_size=1,
+        bookmark="string",
+    )
+    assert len(pgs.items) == 1
+
+
+@respx.mock
 @pytest.mark.asyncio
 async def test_async_list_feeds(async_api, helpers):
     respx.get(f"{pin.Api.DEFAULT_API_URL}catalogs/feeds").respond(
@@ -268,7 +347,7 @@ async def test_async_delete_feed(async_api, helpers):
 
 @respx.mock
 @pytest.mark.asyncio
-async def test_list_catalogs_feed_processing_results(async_api, helpers):
+async def test_async_list_catalogs_feed_processing_results(async_api, helpers):
     feed_id = "string"
     respx.get(
         f"{pin.Api.DEFAULT_API_URL}catalogs/feeds/{feed_id}/processing_results"
@@ -284,7 +363,7 @@ async def test_list_catalogs_feed_processing_results(async_api, helpers):
 
 @respx.mock
 @pytest.mark.asyncio
-async def test_get_catalog_items(async_api, helpers):
+async def test_async_get_catalog_items(async_api, helpers):
     respx.get(f"{pin.Api.DEFAULT_API_URL}catalogs/items").respond(
         status_code=200,
         json=helpers.load_data("tests/data/catalogs/get_catalog_items_resp.json"),
@@ -297,7 +376,7 @@ async def test_get_catalog_items(async_api, helpers):
 
 @respx.mock
 @pytest.mark.asyncio
-async def test_get_catalog_items_batch(async_api, helpers):
+async def test_async_get_catalog_items_batch(async_api, helpers):
     batch_id = "595953100599279259-66753b9bb65c46c49bd8503b27fecf9e"
     respx.get(f"{pin.Api.DEFAULT_API_URL}catalogs/items/batch/{batch_id}").respond(
         status_code=200,
@@ -309,7 +388,7 @@ async def test_get_catalog_items_batch(async_api, helpers):
 
 @respx.mock
 @pytest.mark.asyncio
-async def test_perform_items_batch(async_api, helpers):
+async def test_async_perform_items_batch(async_api, helpers):
     respx.post(f"{pin.Api.DEFAULT_API_URL}catalogs/items/batch").respond(
         status_code=200,
         json=helpers.load_data(
@@ -377,3 +456,89 @@ async def test_perform_items_batch(async_api, helpers):
     )
     assert batch.batch_id == "595953100599279259-66753b9bb65c46c49bd8503b27fecf9e"
     assert batch.status == "PROCESSING"
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_async_get_product_group(async_api, helpers):
+    product_group_id = "443727193917"
+    respx.get(
+        f"{pin.Api.DEFAULT_API_URL}catalogs/product_groups/{product_group_id}"
+    ).respond(
+        status_code=200,
+        json=helpers.load_data("tests/data/catalogs/get_product_group_resp.json"),
+    )
+    pg = await async_api.catalogs.get_product_group(product_group_id=product_group_id)
+    assert pg.name == "Most Popular"
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_async_create_product_group(async_api, helpers):
+    respx.post(f"{pin.Api.DEFAULT_API_URL}catalogs/product_groups").respond(
+        status_code=200,
+        json=helpers.load_data("tests/data/catalogs/create_product_group_resp.json"),
+    )
+    pg = await async_api.catalogs.create_product_group(
+        feed_id="2680059592705",
+        name="Most Popular",
+        filters={
+            "any_of": [{"MIN_PRICE": {"inclusion": True, "values": 0, "negated": True}}]
+        },
+        description="string",
+    )
+    assert pg.name == "Most Popular"
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_async_update_product_group(async_api, helpers):
+    product_group_id = "443727193917"
+    respx.patch(
+        f"{pin.Api.DEFAULT_API_URL}catalogs/product_groups/{product_group_id}"
+    ).respond(
+        status_code=200,
+        json=helpers.load_data("tests/data/catalogs/update_product_group_resp.json"),
+    )
+    pg = await async_api.catalogs.update_product_group(
+        product_group_id=product_group_id,
+        feed_id="2680059592705",
+        name="Most Popular",
+        description="string",
+        filters={
+            "any_of": [{"MIN_PRICE": {"inclusion": True, "values": 0, "negated": True}}]
+        },
+    )
+    assert pg.id == product_group_id
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_async_delete_product_group(async_api, helpers):
+    product_group_id = "443727193917"
+    respx.delete(
+        f"{pin.Api.DEFAULT_API_URL}catalogs/product_groups/{product_group_id}"
+    ).respond(
+        status_code=204,
+        json={"code": 0, "message": "string"},
+    )
+    st = await async_api.catalogs.delete_product_group(
+        product_group_id=product_group_id
+    )
+    assert st
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_async_get_product_group_list(async_api, helpers):
+    feed_id = "2680059592705"
+    respx.get(f"{pin.Api.DEFAULT_API_URL}catalogs/product_groups").respond(
+        status_code=200,
+        json=helpers.load_data("tests/data/catalogs/get_product_groups_list_resp.json"),
+    )
+    pgs = await async_api.catalogs.get_product_group_list(
+        feed_id=feed_id,
+        page_size=1,
+        bookmark="string",
+    )
+    assert len(pgs.items) == 1

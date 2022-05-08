@@ -350,7 +350,7 @@ class CatalogsEndpoint(Endpoint):
             data["filters"] = filters
         if description is not None:
             data["description"] = description
-        resp = self._post(url=f"catalogs/product_groups/{product_group_id}", json=data)
+        resp = self._patch(url=f"catalogs/product_groups/{product_group_id}", json=data)
         data = self._parse_response(resp)
         return data if return_json else CatalogProductGroup.new_from_json_dict(data)
 
