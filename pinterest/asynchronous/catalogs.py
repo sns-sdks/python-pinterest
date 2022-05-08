@@ -12,6 +12,8 @@ from pinterest.models import (
     CatalogFeedProcessResultsResponse,
     CatalogItemsResponse,
     CatalogItemProcessingRecordResponse,
+    CatalogProductGroup,
+    CatalogProductGroupsResponse,
 )
 
 
@@ -276,4 +278,124 @@ class CatalogsEndpoint(AsyncEndpoint):
             data
             if return_json
             else CatalogItemProcessingRecordResponse.new_from_json_dict(data)
+        )
+
+    async def get_product_group(
+        self, product_group_id: str, return_json: bool = False
+    ) -> Union[CatalogProductGroup, dict]:
+        """
+        Get a singe product group for a given Catalogs Product Group ID.
+
+        :param product_group_id: Unique identifier of a product group.
+        :param return_json: Type for returned data. If you set True JSON data will be returned.
+        :return: Product group data.
+        """
+
+        resp = await self._get(url=f"catalogs/product_groups/{product_group_id}")
+        data = self._parse_response(response=resp)
+        return data if return_json else CatalogProductGroup.new_from_json_dict(data)
+
+    async def create_product_group(
+        self,
+        feed_id: str,
+        name: str,
+        filters: dict,
+        description: Optional[str] = None,
+        return_json: bool = False,
+    ) -> Union[CatalogProductGroup, dict]:
+        """
+        :param feed_id: ID of the catalogs feed belonging to this catalog product group.
+        :param name: Name of catalog product group.
+        :param filters: Object holding a group of filters for a catalog product group
+        :param description: Description for product group.
+        :param return_json: Type for returned data. If you set True JSON data will be returned.
+        :return: Product group data.
+        """
+        data = {"feed_id": feed_id, "name": name, "filters": filters}
+        if description is not None:
+            data["description"] = description
+        resp = await self._post(
+            url=f"catalogs/product_groups",
+            json=data,
+        )
+        data = self._parse_response(response=resp)
+        return data if return_json else CatalogProductGroup.new_from_json_dict(data)
+
+    async def update_product_group(
+        self,
+        product_group_id: str,
+        feed_id: Optional[str] = None,
+        name: Optional[str] = None,
+        filters: Optional[dict] = None,
+        description: Optional[str] = None,
+        return_json: bool = False,
+    ) -> Union[CatalogProductGroup, dict]:
+        """
+        Update product group to use in Catalogs.
+
+        :param product_group_id: Unique identifier of a product group.
+        :param feed_id: Catalog Feed id pertaining to the catalog product group.
+        :param name: Name for catalog product group.
+        :param filters: Object holding a group of filters for a catalog product group.
+        :param description: Description for catalog product group.
+        :param return_json: Type for returned data. If you set True JSON data will be returned.
+        :return: Product group data.
+        """
+        data = {}
+        if feed_id is not None:
+            data["feed_id"] = feed_id
+        if name is not None:
+            data["name"] = name
+        if filters is not None:
+            data["filters"] = filters
+        if description is not None:
+            data["description"] = description
+        resp = await self._patch(
+            url=f"catalogs/product_groups/{product_group_id}", json=data
+        )
+        data = self._parse_response(resp)
+        return data if return_json else CatalogProductGroup.new_from_json_dict(data)
+
+    async def delete_product_group(
+        self,
+        product_group_id: str,
+    ) -> bool:
+        """
+        Delete a product group from being in use in Catalogs.
+
+        :param product_group_id: Unique identifier of a product group.
+        :return: delete status.
+        """
+        resp = await self._delete(url=f"catalogs/product_groups/{product_group_id}")
+        if resp.is_success:
+            return True
+        self._parse_response(response=resp)
+
+    async def get_product_group_list(
+        self,
+        feed_id: str,
+        page_size: int = 25,
+        bookmark: Optional[str] = None,
+        return_json: bool = False,
+    ) -> Union[CatalogProductGroupsResponse, dict]:
+        """
+        Get a list of product groups for a given Catalogs Feed ID.
+
+        :param feed_id: Unique identifier of a feed.
+        :param page_size: Maximum number of items to include in a single page of the response. [1...100]
+        :param bookmark: Cursor used to fetch the next page of items.
+        :param return_json: Type for returned data. If you set True JSON data will be returned.
+        :return: Catalog product group list.
+        """
+
+        params = {"feed_id": feed_id, "page_size": page_size}
+        if bookmark is not None:
+            params["bookmark"] = bookmark
+
+        resp = await self._get(url=f"catalogs/product_groups", params=params)
+        data = self._parse_response(response=resp)
+        return (
+            data
+            if return_json
+            else CatalogProductGroupsResponse.new_from_json_dict(data)
         )

@@ -1,0 +1,1 @@
+{"id":"443727193917","name":"Most Popular","description":"string","filters":{"any_of":[{"MIN_PRICE":{"inclusion":true,"values":0,"negated":true}}]},"type":"TOP_SELLERS","status":"ACTIVE","feed_id":"2680059592705","created_at":1621350033000,"updated_at":1622742155000}
