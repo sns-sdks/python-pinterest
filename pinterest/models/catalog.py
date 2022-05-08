@@ -277,3 +277,22 @@ class CatalogItemProcessingRecordResponse(BaseModel):
     created_time: Optional[str] = field(default=None)
     completed_time: Optional[str] = field(default=None)
     status: Optional[str] = field(default=None)
+
+
+@dataclass
+class CatalogProductGroup(BaseModel):
+    id: Optional[str] = field(default=None)
+    name: Optional[str] = field(default=None)
+    description: Optional[str] = field(default=None)
+    filters: Optional[dict] = field(default=None)
+    type: Optional[str] = field(default=None)
+    status: Optional[str] = field(default=None)
+    feed_id: Optional[str] = field(default=None)
+    created_at: Optional[str] = field(default=None)
+    updated_at: Optional[str] = field(default=None)
+
+
+@dataclass
+class CatalogProductGroupsResponse(BaseModel):
+    items: Optional[List[CatalogProductGroup]] = field(default=None)
+    bookmark: Optional[str] = field(default=None)
