@@ -27,3 +27,23 @@ class AnalyticsAll(BaseModel):
 @dataclass
 class Analytics(BaseModel):
     all: Optional[AnalyticsAll] = field(default=None)
+
+
+@dataclass
+class TopPinsAnalyticsPin(BaseModel):
+    metrics: Optional[dict] = field(default=None)
+    data_status: Optional[dict] = field(default=None)
+    pin_id: Optional[str] = field(default=None)
+
+
+@dataclass
+class TopPinsAnalyticsDateAvailability(BaseModel):
+    latest_available_timestamp: Optional[int] = field(default=None)
+    is_realtime: Optional[bool] = field(default=None)
+
+
+@dataclass
+class TopPinsAnalytics(BaseModel):
+    sort_by: Optional[str] = field(default=None)
+    pins: Optional[List[TopPinsAnalyticsPin]] = field(default=None)
+    date_availability: Optional[TopPinsAnalyticsDateAvailability] = field(default=None)
