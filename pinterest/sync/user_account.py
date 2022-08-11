@@ -129,7 +129,7 @@ class UserAccountEndpoint(Endpoint):
         created_in_last_n_days: Optional[int] = None,
         ad_account_id: Optional[str] = None,
         return_json: bool = False,
-    ) -> Union[dict]:
+    ) -> Union[TopPinsAnalytics, dict]:
         """
         Gets analytics data about a user's top pins (limited to the top 50).
 
