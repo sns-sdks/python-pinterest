@@ -13,7 +13,6 @@ keywords = ["pinterest", "pinterest sdk", "pinterest api v5"]
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -28,8 +27,8 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6.2"
-httpx = "0.22.0"
+python = "^3.7"
+httpx = "^0.23.0"
 Authlib = "^0.15.5"
 dataclasses-json = "^0.5.6"
 
