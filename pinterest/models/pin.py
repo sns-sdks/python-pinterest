@@ -18,6 +18,7 @@ class ImageDetail(BaseModel):
     url: Optional[str] = field(default=None)
 
 
+@dataclass
 class Media(BaseModel):
     images: Optional[Dict[str, ImageDetail]] = field(default=None, repr=False)
     media_type: Optional[str] = field(default=None)
