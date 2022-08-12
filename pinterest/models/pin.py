@@ -18,6 +18,7 @@ class ImageDetail(BaseModel):
     url: Optional[str] = field(default=None)
 
 
+@dataclass
 class Media(BaseModel):
     images: Optional[Dict[str, ImageDetail]] = field(default=None, repr=False)
     media_type: Optional[str] = field(default=None)
@@ -30,11 +31,13 @@ class Pin(BaseModel):
     link: Optional[str] = field(default=None, repr=False)
     title: Optional[str] = field(default=None, repr=False)
     description: Optional[str] = field(default=None, repr=False)
+    dominant_color: Optional[str] = field(default=None, repr=False)
     alt_text: Optional[str] = field(default=None, repr=False)
     board_id: Optional[str] = field(default=None, repr=False)
     board_section_id: Optional[str] = field(default=None, repr=False)
     board_owner: Optional[Owner] = field(default=None, repr=False)
     media: Optional[Media] = field(default=None, repr=False)
+    parent_pin_id: Optional[str] = field(default=None, repr=False)
 
 
 @dataclass

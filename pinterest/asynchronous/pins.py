@@ -16,8 +16,10 @@ class PinsAsyncEndpoint(AsyncEndpoint):
         link: Optional[str] = None,
         title: Optional[str] = None,
         description: Optional[str] = None,
+        dominant_color: Optional[str] = None,
         alt_text: Optional[str] = None,
         board_section_id: Optional[str] = None,
+        parent_pin_id: Optional[str] = None,
         return_json: bool = False,
     ) -> Union[Pin, dict]:
         """
@@ -29,8 +31,10 @@ class PinsAsyncEndpoint(AsyncEndpoint):
         :param link: Link for the pin.
         :param title: Title for the pin.
         :param description: Description for the pin.
+        :param dominant_color: Dominant pin color. Hex number, e.g. "#6E7874".
         :param alt_text: Alt_text for the pin.
         :param board_section_id: The board section to which this Pin belongs.
+        :param parent_pin_id: The source pin id if this pin was saved from another pin.
         :param return_json: Type for returned data. If you set True JSON data will be returned.
         :return: Pin data
         """
@@ -39,9 +43,10 @@ class PinsAsyncEndpoint(AsyncEndpoint):
             "media_source": media_source,
             "link": link,
             "title": title,
-            "description": description,
+            "dominant_color": dominant_color,
             "alt_text": alt_text,
             "board_section_id": board_section_id,
+            "parent_pin_id": parent_pin_id,
         }
         resp = await self._post(url=f"pins", json=data)
         data = self._parse_response(response=resp)
@@ -81,6 +86,22 @@ class PinsAsyncEndpoint(AsyncEndpoint):
         if resp.is_success:
             return True
         self._parse_response(response=resp)
+
+    async def save(
+        self, pin_id: str, board_id: Optional[str] = None, return_json: bool = False
+    ) -> Union[Pin, dict]:
+        """
+        Save a pin on a board owned by the "operation user_account".
+
+        :param pin_id: Unique identifier of a Pin.
+        :param board_id: Unique identifier of the board to which the pin will be saved.
+        :param return_json: Type for returned data. If you set True JSON data will be returned.
+        :return: Pin data.
+        """
+        params = {"board_id": board_id} if board_id else None
+        resp = await self._post(url=f"pins/{pin_id}/save", json=params)
+        data = self._parse_response(response=resp)
+        return data if return_json else Pin.new_from_json_dict(data=data)
 
     async def get_analytics(
         self,
