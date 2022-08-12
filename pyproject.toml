@@ -29,7 +29,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.6.2"
-httpx = "0.22.0"
+httpx = "^0.23.0"
 Authlib = "^0.15.5"
 dataclasses-json = "^0.5.6"
 
